@@ -19,8 +19,8 @@ export function Hero() {
     const mm = gsap.matchMedia();
 
     const ctx = gsap.context(() => {
-      // --- Entrada (Sin cambios en lógica, solo corregido para evitar conflictos) ---
-      const entranceTl = gsap.timeline({ delay: 0.3 })
+     
+      const entranceTl = gsap.timeline({ delay: 0.5 })
 
       entranceTl.fromTo(
         [titleLine1Ref.current, titleLine2Ref.current],
@@ -41,13 +41,12 @@ export function Hero() {
         "-=0.6"
       )
 
-      // --- Parallax Responsivo Unificado ---
       mm.add({
         isDesktop: "(min-width: 1024px)",
         isMobile: "(max-width: 1023px)"
       }, (context) => {
         const { isDesktop } = context.conditions as any;
-        const multiplier = isDesktop ? 1 : 0.4; // Reduce movimiento en móvil para evitar que desaparezcan
+        const multiplier = isDesktop ? 1 : 0.3; 
 
         const scrollTl = gsap.timeline({
           scrollTrigger: {
@@ -61,11 +60,11 @@ export function Hero() {
 
         scrollTl
           .to(bgRef.current, { yPercent: 15 * multiplier, scale: 1.05, ease: "none" }, 0)
-          .to(titleLine1Ref.current, { y: -120 * multiplier, ease: "none" }, 0)
-          .to(titleLine2Ref.current, { y: -80 * multiplier, ease: "none" }, 0)
-          .to(subtitleRef.current, { y: -40 * multiplier, ease: "none" }, 0)
+          .to(titleLine1Ref.current, { y: -100 * multiplier, ease: "none" }, 0)
+          .to(titleLine2Ref.current, { y: -60 * multiplier, ease: "none" }, 0)
+          .to(subtitleRef.current, { y: -30 * multiplier, ease: "none" }, 0)
           .to(ctaRef.current, { y: -20 * multiplier, ease: "none" }, 0)
-          .to(marqueeRef.current, { y: -30 * multiplier, ease: "none" }, 0);
+          .to(marqueeRef.current, { y: -40 * multiplier, ease: "none" }, 0);
       });
 
     }, containerRef)
@@ -76,27 +75,32 @@ export function Hero() {
     };
   }, [])
 
+  const services = [
+    "UX Research", "UI Design", "Brand Identity", 
+    "Prototyping", "Motion Design", "Strategy"
+  ];
+
   return (
     <section
       ref={containerRef}
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-deep-black"
+      className="relative flex min-h-screen flex-col items-center justify-start overflow-hidden bg-background pt-[12vh] lg:justify-center lg:pt-0"
     >
-      {/* Background original */}
+      {/* Fondo con Parallax */}
       <div ref={bgRef} className="absolute inset-0 pointer-events-none">
         <img
           src="/images/hero-bg.jpg"
-          alt=""
+          alt="Background"
           className="h-full w-full object-cover opacity-30"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-deep-black/60 via-deep-black/40 to-deep-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/40 to-background" />
       </div>
 
-      {/* Contenido con tus variables de color originales */}
-      <div className="relative z-10 flex flex-col items-center px-6 text-center">
+    
+      <div className="relative z-10 flex flex-col items-center px-6 text-center pb-40 lg:pb-0">
         <div className="overflow-hidden pb-2">
           <span
             ref={titleLine1Ref}
-            className="block font-serif text-5xl font-light leading-tight tracking-tight text-cream sm:text-7xl md:text-8xl lg:text-9xl"
+            className="block font-serif text-5xl font-light leading-tight tracking-tight text-foreground sm:text-7xl md:text-8xl lg:text-9xl"
             style={{ transformStyle: "preserve-3d" }}
           >
             Crafting Digital
@@ -114,21 +118,22 @@ export function Hero() {
 
         <p
           ref={subtitleRef}
-          className="mt-8 max-w-xl text-[10px] uppercase tracking-[0.3em] text-cream/50 sm:text-sm md:text-base"
+          className="mt-6 max-w-xl text-[10px] uppercase tracking-[0.4em] text-foreground/50 sm:text-xs md:text-sm"
         >
           {"UI/UX Design Studio \u2014 Strategy, Design & Innovation"}
         </p>
 
-        <div ref={ctaRef} className="mt-12">
+       
+        <div ref={ctaRef} className="mt-10 lg:mt-12">
           <a
-            href="#services"
+            href="#projects"
             onClick={(e) => {
               e.preventDefault()
-              document.querySelector("#services")?.scrollIntoView({ behavior: "smooth" })
+              document.querySelector("#projects")?.scrollIntoView({ behavior: "smooth" })
             }}
-            className="group relative inline-flex items-center gap-3 border border-gold/30 px-8 py-4 text-[10px] uppercase tracking-[0.3em] text-cream transition-all duration-500 hover:border-gold hover:bg-gold/10 sm:text-xs"
+            className="group relative inline-flex items-center gap-4 border border-gold/30 px-8 py-4 text-[10px] uppercase tracking-[0.3em] text-foreground transition-all duration-500 hover:border-gold hover:bg-gold/10 sm:text-xs"
           >
-            <span>Explore Our Work</span>
+            <span className="relative z-10">Explore Our Work</span>
             <svg
               className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1"
               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
@@ -139,30 +144,27 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Marquee corregido */}
+     
       <div
         ref={marqueeRef}
-        className="absolute bottom-0 left-0 right-0 z-10 border-t border-border/30 bg-deep-black/60 py-4 backdrop-blur-md"
+        className="absolute bottom-0 left-0 right-0 z-20 border-t border-border/30 bg-background/80 py-4 backdrop-blur-xl lg:py-6"
       >
-        <div className="flex animate-marquee whitespace-nowrap">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="flex items-center">
-              {[
-                "UX Research",
-                "UI Design",
-                "Brand Identity",
-                "Prototyping",
-                "Motion Design",
-              ].map((text) => (
-                <span key={`${i}-${text}`} className="flex items-center">
-                  <span className="mx-8 text-[10px] uppercase tracking-[0.4em] text-cream/30 sm:text-xs">
-                    {text}
-                  </span>
-                  <span className="text-gold/40">{"*"}</span>
-                </span>
-              ))}
-            </div>
-          ))}
+        <div className="marquee-container">
+          <div className="marquee-content flex gap-4">
+         
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="flex items-center gap-8 px-4">
+                {services.map((service, index) => (
+                  <div key={index} className="flex items-center gap-8">
+                    <span className="whitespace-nowrap text-[9px] uppercase tracking-[0.4em] text-foreground/40 sm:text-[10px]">
+                      {service}
+                    </span>
+                    <span className="text-gold/30 text-xs font-light">•</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
