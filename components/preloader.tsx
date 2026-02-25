@@ -11,45 +11,51 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
   const [count, setCount] = useState(0)
 
   useEffect(() => {
-    // Counter animation
+    // 1. Lógica del Contador (Sincronizada con el tiempo de la animación)
     const interval = setInterval(() => {
       setCount((prev) => {
         if (prev >= 100) {
           clearInterval(interval)
           return 100
         }
-        return prev + 3
+        return prev + 1
       })
-    }, 25)
+    }, 15) // Un poco más rápido para fluidez
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
-        delay: 0.2,
         onComplete: () => {
-          // Exit animation
+          // Animación de salida: Efecto de persiana hacia arriba
           gsap.to(containerRef.current, {
             clipPath: "inset(0 0 100% 0)",
-            duration: 0.8,
+            duration: 1.2,
             ease: "power4.inOut",
-            onComplete: () => {
-              onComplete()
-            },
+            onComplete: onComplete,
           })
         },
       })
 
+      // Entrada del texto "NOIR"
       tl.fromTo(
         textRef.current,
-        { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }
+        { y: 60, opacity: 0, skewY: 7 },
+        { y: 0, opacity: 1, skewY: 0, duration: 1, ease: "power4.out", delay: 0.2 }
       )
-        .fromTo(
-          lineRef.current,
-          { scaleX: 0 },
-          { scaleX: 1, duration: 1.2, ease: "power2.inOut" },
-          "-=0.2"
-        )
-        .to(textRef.current, { y: -20, opacity: 0, duration: 0.3, ease: "power2.in" }, "+=0.1")
+      // Carga de la línea (Sincronizada con el contador visualmente)
+      .fromTo(
+        lineRef.current,
+        { scaleX: 0 },
+        { scaleX: 1, duration: 2, ease: "power2.inOut" },
+        "-=0.5"
+      )
+      // Salida del texto antes de que se abra la persiana
+      .to(textRef.current, { 
+        y: -40, 
+        opacity: 0, 
+        duration: 0.6, 
+        ease: "power4.in" 
+      }, "+=0.2")
+
     }, containerRef)
 
     return () => {
@@ -61,28 +67,35 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-deep-black"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background"
       style={{ clipPath: "inset(0 0 0% 0)" }}
     >
-      <div className="flex flex-col items-center">
-        <span
-          ref={textRef}
-          className="font-serif text-3xl font-light tracking-widest text-cream md:text-5xl"
-        >
-          NOIR
-        </span>
-        <div className="mt-6 h-px w-48 overflow-hidden">
+      <div className="flex flex-col items-center px-6 text-center">
+        {/* Contenedor del texto para ocultar el overflow durante la animación */}
+        <div className="overflow-hidden py-2">
+          <span
+            ref={textRef}
+            className="block font-serif text-4xl font-light tracking-[0.2em] text-foreground sm:text-6xl md:text-7xl"
+          >
+            NOIR
+          </span>
+        </div>
+
+        {/* Línea de carga responsiva */}
+        <div className="mt-8 h-[1px] w-32 overflow-hidden bg-white/5 sm:w-48">
           <div
             ref={lineRef}
             className="h-full w-full origin-left bg-gold"
             style={{ transform: "scaleX(0)" }}
           />
         </div>
+
+        {/* Contador */}
         <span
           ref={counterRef}
-          className="mt-4 text-xs tracking-[0.4em] text-cream/30"
+          className="mt-6 font-sans text-[10px] tabular-nums tracking-[0.5em] text-gold/50"
         >
-          {count}%
+          {count.toString().padStart(3, '0')}%
         </span>
       </div>
     </div>
