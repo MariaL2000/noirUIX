@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="https://noirUIX.vercel.app" target="_blank">
+  <a href="https://noir-uix.vercel.app/" target="_blank">
     <img src="https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
   </a>
   <img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next JS" />
